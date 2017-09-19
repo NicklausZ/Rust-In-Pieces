@@ -1,0 +1,49 @@
+package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.Servo;
+
+
+/**
+ * Created by Nicklauss on 9/11/2017.
+ */
+@Autonomous(name = "Autonomouscode", group = "teleoptutorial")
+public class Autonomouscode extends teleoptutorial {
+
+
+    DcMotor motorbackleft = null;
+    DcMotor motorbackright = null;
+    DcMotor motorfrontleft = null;
+    DcMotor motorfrontright = null;
+    Servo arm1servo = null;
+    Servo arm2servo = null;
+
+}
+public void main() throws InterruptedException {
+
+    motorbackleft = hardwareMap.dcMotor.get("motorleft");
+    motorbackright = hardwareMap.dcMotor.get("motorright");
+    motorfrontleft = hardwareMap.dcMotor.get("motorfrontleft");
+    motorfrontright = hardwareMap.dcMotor.get("motorfrontright");
+    arm1servo = hardwareMap.servo.get("arm1servo");
+    arm2servo = hardwareMap.servo.get("arm2servo");
+    motorbackleft.setDirection(DcMotor.Direction.REVERSE); /* direction set to change */
+    motorbackright.setDirection(DcMotor.Direction.REVERSE);/* direction set to change */
+    motorfrontleft.setDirection(DcMotor.Direction.REVERSE);/* direction set to change */
+    motorfrontright.setDirection(DcMotor.Direction.REVERSE);/* direction set to change */
+
+    motorbackleft.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
+
+
+        waitForStart();
+
+
+
+
+}
+
+
