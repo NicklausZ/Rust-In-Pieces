@@ -1,0 +1,50 @@
+/*
+** MECHANIUM WHEEL HOLONOMIC TELEOP PROGRAM
+** The active teleop program that accepts joystick controls for Mechanium wheels
+** Programmed by Parker Carlson
+** Red Hot Techie Pepperz - Team # 9357
+** Created 12/01/16
+** Version # - 1.01
+** Modified 12/06/16
+*/
+
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+@TeleOp(name="mechHoloV1", group="holonomic")
+public class mechHoloV1 extends OpMode {
+
+    mechHoloRobotV1 robot = new mechHoloRobotV1(0.5, 0.5); // uses mechHolo
+    // RobotV1 to config stuff, interface commands
+
+    @Override
+    public void init() {
+
+        //initialize robot interface
+        robot.init(hardwareMap);
+    }
+
+    @Override
+    public void loop() {
+        double x = gamepad1.right_stick_x;
+        double y = gamepad1.right_stick_y;
+        double r = -gamepad1.left_stick_x;
+        robot.updateMode(gamepad1.dpad_down, gamepad1.dpad_left, gamepad1.dpad_right);
+        robot.drive(x, y, r);   //set motor powers based of joystick values; see holonomicRobotV1.java for more info/doc
+
+        // Send message to phone to help debug
+        telemetry.addData("x", "%.2f", x);
+        telemetry.addData("y", "%.2f", y);
+        telemetry.addData("r", "%.2f", r);
+        telemetry.addData("Current Mode: ", robot.getCurrentMode());
+        updateTelemetry(telemetry);
+    }
+
+    @Override
+    public void stop() {
+        robot.stop(); //disable the motors
+    }
+}
+
