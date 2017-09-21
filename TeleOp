@@ -1,0 +1,71 @@
+package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+
+/**
+ * Created by Teacher on 9/7/2017.
+ */
+@TeleOp(name = "Teleop Tutorial",)
+public class teleoptutorial extends LinearOpMode
+{
+    private DcMotor motorbackleft;   /** name subject to change */
+    private DcMotor motorbackright;  /** name subject to change*/
+    private Servo arm1servo;     /** name subject to change */
+    private Servo arm2servo;
+    private DcMotor motorfrontleft;
+    private DcMotor motorfrontright;
+
+    private static final double ARM_RETRACTED_POSITION = 0.2;
+    private static final double ARM_EXTENDED_POSITION = 0.8;
+    @Override
+    public void runOpMode () throws InterruptedException
+    {
+        motorbackleft = hardwareMap.dcMotor.get("motorbackleft"); /* name subject to change */
+        motorbackright = hardwareMap.dcMotor.get("motorbackright"); /* name subject to change */
+        arm1servo = hardwareMap.servo.get("arm1servo"); /* name subject to change */
+        arm2servo = hardwareMap.servo.get("arm2servo");
+        motorfrontleft = hardwareMap.dcMotor.get("motorfrontleft");
+        motorfrontright = hardwareMap.dcMotor.get("motorfrontright");
+        motorbackleft.setDirection(DcMotor.Direction.REVERSE);/* direction set to change */
+        motorfrontleft.setDirection(DcMotor.Direction.REVERSE);/* direction set to change */
+        motorbackright.setDirection(DcMotor.Direction.REVERSE);/* direction set to change */
+        motorfrontright.setDirection(DcMotor.Direction.REVERSE);/* direction set to change */
+
+
+            waitForStart();
+            while(opModeIsActive())
+            {
+                motorbackleft.setPower(-gamepad1.left_stick_y);
+                motorbackleft.setPower(gamepad1.left_stick_y);
+                motorbackright.setPower(-gamepad1.right_stick_y);
+                motorbackright.setPower(gamepad1.right_stick_y);
+                motorfrontleft.setPower(gamepad1.left_trigger);
+                motorfrontright.setPower(gamepad1.right_trigger);
+
+                if(gamepad2.a)
+                {
+                    arm1servo.setPosition(ARM_EXTENDED_POSITION);
+
+                }
+
+                if(gamepad2.b)
+                {
+                   arm1servo.setPosition(ARM_RETRACTED_POSITION);
+                }
+
+                if(gamepad2.x)
+                {
+                    arm2servo.setPosition(ARM_EXTENDED_POSITION );
+                }
+
+                if(gamepad2.y)
+                {
+                    arm2servo.setPosition(ARM_RETRACTED_POSITION);
+                }
+                idle();
+            }
+    }
+
+}
