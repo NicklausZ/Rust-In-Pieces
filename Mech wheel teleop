@@ -1,0 +1,50 @@
+/*
+** HOLONOMIC TELEOP PROGRAM
+** The active teleop program that accepts joystick controls
+** Programmed by Parker Carlson
+** Red Hot Techie Pepperz - Team # 9357
+** Created 10/12/16
+** Version # - 1.08
+** Modified 11/01/16
+*/
+
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+@TeleOp(name="holonomicV1", group="holonomic")
+public class holonomicV1 extends OpMode {
+
+    holonomicRobotV1 robot = new holonomicRobotV1(0.7, 0.3, 1); // uses holonomicRobotV1 to config stuff, interface commands
+
+    double joyX, joyY, rot = 0; //vars to hold joystick value
+
+    @Override
+    public void init() {
+
+        //initialize robot interface
+        robot.init(hardwareMap);
+    }
+
+    @Override
+    public void loop() {
+
+        //get joystick values
+        joyX = gamepad1.right_stick_x;
+        joyY = gamepad1.right_stick_y;
+        rot = -gamepad1.left_stick_x; //rotation
+
+        robot.drive(joyX, joyY, rot);   //set motor powers based of joystick values; see holonomicRobotV1.java for more info/doc
+
+        // Send message to phone to help debug
+        /*telemetry.addData("FL", "%.2f", joyX-rot)
+        updateTelemetry(telemetry);*/
+    }
+
+    @Override
+    public void stop() {
+        robot.stop(); //disable the motors
+    }
+}
+
