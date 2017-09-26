@@ -1,0 +1,134 @@
+/*
+** INTERFACE FROM TELEOP TO ROBOT
+** Contains functions that directly interface with the motors and their power
+** Programmed by Parker Carlson
+** Red Hot Techie Pepperz - Team # 9357
+** Created 10/12/16
+** Version # - 1.20
+** Modified 11/01/16
+*/
+
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+
+public class holonomicRobotV1 {
+
+    private DcMotor  FLM, FRM, BLM, BRM = null; //declare motors
+
+    private HardwareMap map =  null; //local HW map
+
+    private double x,y = 0;
+
+    //factor by which the robot's drive is rotated.
+    //reduced value of sin(pi/4) and cos(pi/4). reduced to improve performance.
+    private final static double FACTOR = 1/Math.sqrt(2);
+
+    //holds the weights of the rotation and speed.
+    private final double D_SCALE; //drive scale
+    private final double R_SCALE; //rotation scale
+
+    //holds the rotation fix info
+    private final double ROT_FIX;
+
+    /* Constructor */
+    public holonomicRobotV1(double drive_weight, double rotation_weight, double rotation_fix){
+        D_SCALE = drive_weight;
+        R_SCALE = rotation_weight;
+        ROT_FIX = rotation_fix;
+    }
+
+    /* Initialize standard Hardware interfaces */
+    public void init(HardwareMap newMap) {
+        // Save reference to Hardware map
+        map = newMap;
+
+        // Define and Initialize Motors
+        FLM = map.dcMotor.get("frontLeft");
+        FRM = map.dcMotor.get("frontRight");
+        BLM = map.dcMotor.get("backLeft");
+        BRM = map.dcMotor.get("backRight");
+
+        //Set Proper directions based on
+        FLM.setDirection(DcMotor.Direction.REVERSE);
+        FRM.setDirection(DcMotor.Direction.REVERSE);
+        BLM.setDirection(DcMotor.Direction.FORWARD);
+        BRM.setDirection(DcMotor.Direction.FORWARD);
+
+        // Set all motors to zero power
+        setAll(0);
+    }
+
+    private void setAll(int power){  //sets all of the motors to same value
+        FLM.setPower(power);
+        FRM.setPower(power);
+        BLM.setPower(power);
+        BRM.setPower(power);
+    }
+
+    public void drive(double x, double y, double rotation){  //drive function; adjusted for direction
+
+        //adjust x and y by 45 deg so the robot drives straight
+        getXY(x,y);
+        x=rotateX(this.x,this.y);
+        y=rotateY(this.x,this.y);
+
+        //check to see if robot is moving. if so, rotate the robot against its natural rotation to drive straight
+        /*if(x != 0 || y != 0){
+            rotation = fixRot(rotation);
+        }*/
+
+        //weight rotation and drive values.
+        x = scale(x, D_SCALE);
+        y = scale(y, D_SCALE);
+        rotation = scale(rotation, R_SCALE);
+
+        //assigned x/y based on diagonal, adding/subtracting direction based on adjacent wheels
+        FLM.setPower(x - rotation);
+        BRM.setPower(x + rotation);
+
+        FRM.setPower(y - rotation);
+        BLM.setPower(y + rotation);
+
+    }
+
+    public void stop(){ //public access to set all wheels to 0
+        setAll(0);
+    }
+
+    private void getXY(double x, double y){
+        this.x = x;
+        this.y = y;
+    }
+
+    //USES ROTATIONAL MATRIX
+    //[cos(Θ), -sin(Θ)]*[x]
+    //[sin[Θ], cos(Θ)] *[y]
+    //Θ = pi/4, reduces to 1/root(2)
+    //ends up being -Θ*x+Θ*y=x
+    //               Θ*x+Θ*y=y
+    private double rotateX(double x, double y){
+        return normalize((x * (-1 * FACTOR)) + (y * FACTOR));
+    }
+
+    private double rotateY(double x, double y){
+        return normalize((y * FACTOR) + (x * FACTOR));
+    }
+
+    //rotational value will be scaled by root(2). This undoes this change.
+    //ex 1,1 will be rotated to 0,root(2). This changes the value to 0,1
+    private double normalize(double val){
+        return val/Math.sqrt(2);
+    }
+
+    private double scale(double val, double scale){
+        return scale*val;
+    }
+
+    private double fixRot(double rot){        //our robot naturally rotates to the left. this fixes it
+        return rot-ROT_FIX;
+    }
+}
