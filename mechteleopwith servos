@@ -1,0 +1,67 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
+
+@TeleOp(name="holonomicV1", group="holonomic")
+class holonomicV1 extends OpMode {
+
+    holonomicRobotV1 robot = new holonomicRobotV1(0.7, 0.3, 1); // uses holonomicRobotV1 to config stuff, interface commands
+
+    double joyX, joyY, rot = 0; //vars to hold joystick value
+    double          servopos      = 0;                       // Servo mid position
+    final double    servo_speed      = 0.02 ;                   // sets rate to move servo
+
+    @Override
+    public void init() {
+
+        //initialize robot interface
+        robot.init(hardwareMap);
+    }
+
+    @Override
+    public void loop() {
+
+        //get joystick values
+        joyX = gamepad1.right_stick_x;
+        joyY = gamepad1.right_stick_y;
+        rot = -gamepad1.left_stick_x; //rotation
+
+
+        robot.drive(joyX, joyY, rot);   //set motor powers based of joystick values; see holonomicRobotV1.java for more info/doc
+
+        // Use gamepad left & right Bumpers to open and close the servo pairs
+        if (gamepad1.right_bumper)
+            servopos += servo_speed;
+        else if (gamepad1.left_bumper)
+            servopos -= servo_speed;
+
+        // Move both servos to new position.  Assume servos are mirror image of each other.
+        servopos = Range.clip(servo_speed, -0.5, 0.5);
+        robot.Servo1.setPosition(robot.MID_SERVO + servopos);
+        robot.Servo2.setPosition(robot.MID_SERVO - servopos);
+        robot.Servo3.setPosition(robot.MID_SERVO + servopos);
+        robot.Servo4.setPosition(robot.MID_SERVO - servopos);
+
+        if(gamepad1.a) {
+            robot.TRM.setPower(1);
+            robot.TLM.setPower(1);
+            if (gamepad1.b) {
+                robot.TRM.setPower(0);
+                robot.TLM.setPower(0);
+            }
+
+        }
+
+        // Send message to phone to help debug
+        telemetry.addData("FL", "%.2f", joyX-rot);
+        updateTelemetry(telemetry);
+    }
+
+    @Override
+    public void stop() {
+        robot.stop(); //disable the motors
+    }
+}
+
