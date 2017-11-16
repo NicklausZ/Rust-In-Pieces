@@ -7,3 +7,22 @@ EXT.setPower(-gamepad2.right_stick_y);
         EXT.setPower(-gamepad2.right_stick_y);
         }
             }
+            
+            
+            
+EXT.setPower(gamepad2.right_stick_y);
+EXT.setPower(-gamepad2.right_stick_y);
+    if(height > 8) {
+        EXT.setTargetPosition(8);
+        if(height == 8) {
+        EXT.setPower(gamepad2.right_stick_y);
+        EXT.setPower(-gamepad2.right_stick_y);
+        if(height < 4) {
+        EXT.setTargetPosition(4);
+        if(height == 4) {
+        EXT.setPower(gamepad2.right_stick_y);
+        EXT.setPower(-gamepad2.right_stick_y);
+        }
+        }
+        }
+            }
