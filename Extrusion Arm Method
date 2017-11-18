@@ -8,7 +8,7 @@ EXT.setPower(-gamepad2.right_stick_y);
         }
             }
             
-            
+          public var    ticks per height;  
             
 EXT.setPower(gamepad2.right_stick_y);
 EXT.setPower(-gamepad2.right_stick_y);
@@ -26,3 +26,10 @@ EXT.setPower(-gamepad2.right_stick_y);
         }
         }
             }
+EXT.setPower(gamepad2.dpad);
+    if(gamepad2.dpad(up)){
+     EXT.setTargetPosition(height + ticks per height);
+    if(gamepad2.dpad(down)){
+     EXT.setTargetPosition(height - ticks per height);
+     }
+     }
