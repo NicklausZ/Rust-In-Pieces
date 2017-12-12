@@ -1,0 +1,10 @@
+public servo J1, J2;
+
+J1 = map.servo.get("Jewel1");
+J2 = map.servo.get("Jewel2");
+
+double ServoJmax = 0.71;
+double ServoJmin = 0.21;
+
+robot.J1.setPosition(gamepad2.right_trigger);
+robot.J2.setPosition9gamepad2.right_trigger);
