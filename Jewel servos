@@ -8,7 +8,7 @@ double ServoJmin = 0.05;
 
 lTrig1 = gamepad1.right_trigger * 0.45;
 
-robot.J1.setPosition(1-(ServoJmin +((ServoJmax - ServoJmin) * lTrig1)));
-robot.J2.setPosition(ServoJmin +((ServoJmax - ServoJmin) * lTrig1)));
+robot.J1.setPosition(1-(ServoJmin + lTrig1));
+robot.J2.setPosition(ServoJmin + lTrig1);
 
 
